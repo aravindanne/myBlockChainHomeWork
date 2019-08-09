@@ -25,7 +25,6 @@ class Block{
 			this.nonce++;
 			this.hash = this.calculateHash();
 		} 
-		console.log("Block mined: "+this.hash);
 	}
 }
 
@@ -50,7 +49,6 @@ class BlockChain{
 		let block = new Block(this.pendingTransactions);
 		block.mineBlock(this.difficulty);
 
-		console.log("Block successfully mined...");
 		this.chain.push(block);
 
 		this.pendingTransactions= [
@@ -71,15 +69,32 @@ class BlockChain{
 		for(const block of this.chain){
 			for(const trans of block.transactions){
 				if(trans.fromAddress === address){
+					balance = this.balances[trans.fromAddress];
+					
+					if(balance < trans.value){
+						console.log(trans, ' is invalid.');
+						continue;
+					}
+					
 					balance -= trans.value;
+					this.balances[trans.fromAddress] = balance;
 				}
 				if(trans.toAddress === address){
+					balance = this.balances[trans.toAddress];
+					
+					if(this.balances[trans.fromAddress] < trans.value){
+						console.log(trans, ' is invalid.');
+						continue;
+					}
+					
 					balance += trans.value;
+					this.balances[trans.toAddress] = balance;
 				}
 			}
 		}
 		return balance;
 	} 
+	
 }
 
 let coin = new BlockChain();
@@ -89,14 +104,11 @@ coin.createTransaction(new Transaction(0, 1, 50));
 coin.createTransaction(new Transaction(1, 2, 80));
 coin.createTransaction(new Transaction(2, 0, 450));
 
-
-console.log("Starting the miner...");
-coin.minePendingTransactions(0);
-console.log("Balance of danne is: ", coin.getBalanceOfAddress(0));
+coin.minePendingTransactions(2);
+console.log("Balance is: ", coin.getBalanceOfAddress(0));
 
 
 
-
-console.log(JSON.stringify(coin, null, 4));
+// console.log(JSON.stringify(coin, null, 4));
 
 
