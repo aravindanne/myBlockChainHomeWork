@@ -35,6 +35,7 @@ class BlockChain{
 		this.pendingTransactions = [];
 		this.miningReward = 1;
 		this.balances = [];
+		this.blockSize = 0;
 	}
 
 	createGenesisBlock(){
@@ -64,11 +65,11 @@ class BlockChain{
 		this.balances = initialBalances;
 	}
 	
-	getBalanceOfAddress(address){
+	getAccountBalance(accountIndex){
 		let balance = 0;
 		for(const block of this.chain){
 			for(const trans of block.transactions){
-				if(trans.fromAddress === address){
+				if(trans.fromAddress === accountIndex){
 					balance = this.balances[trans.fromAddress];
 					
 					if(balance < trans.value){
@@ -79,11 +80,11 @@ class BlockChain{
 					balance -= trans.value;
 					this.balances[trans.fromAddress] = balance;
 				}
-				if(trans.toAddress === address){
+				if(trans.toAddress === accountIndex){
 					balance = this.balances[trans.toAddress];
 					
 					if(this.balances[trans.fromAddress] < trans.value){
-						console.log(trans, ' is invalid.');
+						console.log('Invalid', trans);
 						continue;
 					}
 					
@@ -95,20 +96,33 @@ class BlockChain{
 		return balance;
 	} 
 	
+	init(initialBalances, transactions, blockSize){
+		this.addInitialBalances(initialBalances);
+		this.blockSize = blockSize;
+		
+		for(const trans of transactions){
+			this.createTransaction(new Transaction(trans[0], trans[1], trans[2]));
+		}
+		this.minePendingTransactions(0);
+		
+	}
+	
 }
 
 let coin = new BlockChain();
 
-coin.addInitialBalances([100, 100, 500]);
-coin.createTransaction(new Transaction(0, 1, 50));
-coin.createTransaction(new Transaction(1, 2, 80));
-coin.createTransaction(new Transaction(2, 0, 450));
+// coin.addInitialBalances([100, 100, 500]);
+// coin.createTransaction(new Transaction(0, 1, 50));
+// coin.createTransaction(new Transaction(1, 2, 80));
+// coin.createTransaction(new Transaction(2, 0, 450));
+// coin.minePendingTransactions(0);
 
-coin.minePendingTransactions(2);
-console.log("Balance is: ", coin.getBalanceOfAddress(0));
+coin.init([100, 100, 500], [[0,1,50],[1,2,80],[2,0,450]], 2);
+console.log(JSON.stringify(coin, null, 4));
+
+console.log("Balance is: ", coin.getAccountBalance(0));
 
 
 
-// console.log(JSON.stringify(coin, null, 4));
 
 
