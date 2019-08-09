@@ -47,13 +47,13 @@ class BlockChain{
 	}
 
 	minePendingTransactions(miningRewardAddress){
-		let block = new Block(this.pendingTransactions);
+		let block = new Block(this.pendingTransactions, this.getLatestBlock().hash);
 		block.mineBlock(this.difficulty);
 
 		this.chain.push(block);
 
 		this.pendingTransactions= [
-			new Transaction(null, miningRewardAddress, this.miningReward)
+			// new Transaction(null, miningRewardAddress, this.miningReward)
 			];
 	}
 	
@@ -73,7 +73,7 @@ class BlockChain{
 					balance = this.balances[trans.fromAddress];
 					
 					if(balance < trans.value){
-						console.log(trans, ' is invalid.');
+						console.log('Invalid', trans);
 						continue;
 					}
 					
@@ -105,24 +105,8 @@ class BlockChain{
 		}
 		this.minePendingTransactions(0);
 		
-	}
-	
+	}	
 }
 
-let coin = new BlockChain();
-
-// coin.addInitialBalances([100, 100, 500]);
-// coin.createTransaction(new Transaction(0, 1, 50));
-// coin.createTransaction(new Transaction(1, 2, 80));
-// coin.createTransaction(new Transaction(2, 0, 450));
-// coin.minePendingTransactions(0);
-
-coin.init([100, 100, 500], [[0,1,50],[1,2,80],[2,0,450]], 2);
-console.log(JSON.stringify(coin, null, 4));
-
-console.log("Balance is: ", coin.getAccountBalance(0));
-
-
-
-
-
+module.exports.BlockChain = BlockChain;
+module.exports.Transaction = Transaction;
