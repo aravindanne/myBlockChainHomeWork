@@ -46,15 +46,13 @@ class BlockChain{
 		return this.chain[this.chain.length -1];
 	}
 
-	minePendingTransactions(miningRewardAddress){
-		let block = new Block(this.pendingTransactions);
+	minePendingTransactions(){
+		let block = new Block(this.pendingTransactions, this.getLatestBlock().hash);
 		block.mineBlock(this.difficulty);
 
 		this.chain.push(block);
 
-		this.pendingTransactions= [
-			new Transaction(null, miningRewardAddress, this.miningReward)
-			];
+		this.pendingTransactions= [];
 	}
 	
 	createTransaction(transaction){
@@ -73,7 +71,7 @@ class BlockChain{
 					balance = this.balances[trans.fromAddress];
 					
 					if(balance < trans.value){
-						console.log(trans, ' is invalid.');
+						console.log('Invalid', trans);
 						continue;
 					}
 					
@@ -99,30 +97,19 @@ class BlockChain{
 	init(initialBalances, transactions, blockSize){
 		this.addInitialBalances(initialBalances);
 		this.blockSize = blockSize;
-		
+
+		let count = 0;
 		for(const trans of transactions){
+			if(count === this.blockSize){
+				break;
+			}
+			count++;
 			this.createTransaction(new Transaction(trans[0], trans[1], trans[2]));
 		}
-		this.minePendingTransactions(0);
+		this.minePendingTransactions();
 		
-	}
-	
+	}	
 }
 
-let coin = new BlockChain();
-
-// coin.addInitialBalances([100, 100, 500]);
-// coin.createTransaction(new Transaction(0, 1, 50));
-// coin.createTransaction(new Transaction(1, 2, 80));
-// coin.createTransaction(new Transaction(2, 0, 450));
-// coin.minePendingTransactions(0);
-
-coin.init([100, 100, 500], [[0,1,50],[1,2,80],[2,0,450]], 2);
-console.log(JSON.stringify(coin, null, 4));
-
-console.log("Balance is: ", coin.getAccountBalance(0));
-
-
-
-
-
+module.exports.BlockChain = BlockChain;
+module.exports.Transaction = Transaction;
