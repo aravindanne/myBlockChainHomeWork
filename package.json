@@ -1,0 +1,27 @@
+{
+  "name": "MyHomeWork",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "crypto-js": "^3.1.9-1",
+    "elliptic": "^6.5.0",
+    "jest": "^24.8.0",
+    "js-sha1": "^0.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aravindanne/myBlockChainHomeWork.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aravindanne/myBlockChainHomeWork/issues"
+  },
+  "homepage": "https://github.com/aravindanne/myBlockChainHomeWork#readme"
+}
