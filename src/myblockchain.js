@@ -33,7 +33,6 @@ class BlockChain{
 		this.chain = [this.createGenesisBlock()];
 		this.difficulty = 2;
 		this.pendingTransactions = [];
-		this.miningReward = 1;
 		this.balances = [];
 		this.blockSize = 0;
 	}
