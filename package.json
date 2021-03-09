@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "crypto-js": "^3.1.9-1",
-    "elliptic": "^6.5.0",
+    "elliptic": "^6.5.4",
     "jest": "^24.8.0",
     "js-sha1": "^0.6.0"
   },
